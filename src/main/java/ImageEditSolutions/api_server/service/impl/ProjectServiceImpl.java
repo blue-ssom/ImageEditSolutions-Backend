@@ -1,6 +1,7 @@
 package ImageEditSolutions.api_server.service.impl;
 
 import ImageEditSolutions.api_server.dto.request.ProjectReqDto;
+import ImageEditSolutions.api_server.dto.response.ProjectResDto;
 import ImageEditSolutions.api_server.entity.Project;
 import ImageEditSolutions.api_server.global.CustomException;
 import ImageEditSolutions.api_server.global.ErrorCode;
@@ -16,10 +17,8 @@ import java.util.List;
 import java.util.UUID;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @AllArgsConstructor
@@ -44,8 +43,8 @@ public class ProjectServiceImpl implements ProjectService {
            throw new CustomException(ErrorCode.EMPTY_UPLOAD_ID);
 
         // 업로드 아이디 존재 여부 확인
-        if (projectRepository.existsByUploadId(uploadId)) {
-            throw new CustomException(ErrorCode. UPLOAD_ID_ALREADY_EXISTS);
+        if (projectRepository.findByUploadId(uploadId).isPresent()) {
+            throw new CustomException(ErrorCode.UPLOAD_ID_ALREADY_EXISTS);
         }
 
         // 파일 null 체크
@@ -80,6 +79,20 @@ public class ProjectServiceImpl implements ProjectService {
             // IOException 발생 시 예외 처리
             throw new CustomException(ErrorCode.FILE_UPLOAD_ERROR);
         }
+    }
+
+    @Override
+    public ProjectResDto downloadProject(String uploadId) {
+        // 업로드 아이디 null 체크
+        if (uploadId == null || uploadId.trim().isEmpty())
+            throw new CustomException(ErrorCode.EMPTY_UPLOAD_ID);
+
+        // 업로드 아이디로 프로젝트를 찾음
+        Project project = projectRepository.findByUploadId(uploadId)
+                .orElseThrow(() -> new CustomException(ErrorCode.UPLOAD_ID_NOT_FOUND));
+
+        // 프로젝트를 DTO로 변환하여 반환
+        return ProjectMapper.mapToProjectResDto(project);
     }
 
     // 확장자 유효성 검사
