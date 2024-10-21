@@ -1,6 +1,5 @@
 package ImageEditSolutions.api_server.service.impl;
 
-import ImageEditSolutions.api_server.dto.request.ProjectReqDto;
 import ImageEditSolutions.api_server.dto.response.ProjectResDto;
 import ImageEditSolutions.api_server.entity.Project;
 import ImageEditSolutions.api_server.global.CustomException;
@@ -32,10 +31,7 @@ public class ProjectServiceImpl implements ProjectService {
     private ProjectRepository projectRepository;
 
     @Override
-    public void saveProject(ProjectReqDto projectReqDto) {
-        String uploadId = projectReqDto.getUploadId();
-        MultipartFile multipartFile = projectReqDto.getMultipartFile();
-
+    public void saveProject(String uploadId, MultipartFile multipartFile) {
     try{
 
         // 업로드 아이디 null 체크
@@ -73,7 +69,7 @@ public class ProjectServiceImpl implements ProjectService {
         String imageUrl = s3Client.getUrl(bucketName, uniqueFileName).toString();
 
         // 7. 프로젝트 엔티티 생성 및 DB 저장
-        Project project = ProjectMapper.mapToProject(projectReqDto, imageUrl);
+        Project project = ProjectMapper.mapToProject(uploadId, imageUrl);
         projectRepository.save(project);
         } catch (IOException e) {
             // IOException 발생 시 예외 처리
