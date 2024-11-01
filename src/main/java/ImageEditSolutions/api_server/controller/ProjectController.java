@@ -20,8 +20,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api")
-@Tag(name = "Response Estimate", description = "Response Estimate API")
+@Tag(name = "Project Management", description = "프로젝트 업로드 및 다운로드 관련 API")
 public class ProjectController {
+
     @Autowired
     ProjectService projectService;
 
@@ -44,4 +45,5 @@ public class ProjectController {
         ProjectResDto projectResDto = projectService.downloadProject(uploadId);
         return ResponseEntity.ok(projectResDto);
     }
+
 }
