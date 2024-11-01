@@ -31,7 +31,7 @@ public class ProjectServiceImpl implements ProjectService {
     private ProjectRepository projectRepository;
 
     @Override
-    public void saveProject(String uploadId, MultipartFile multipartFile) {
+    public void uploadProject(String uploadId, MultipartFile multipartFile) {
     try{
 
         // 업로드 아이디 null 체크

@@ -29,10 +29,10 @@ public class ProjectController {
     @Operation(summary = "프로젝트 저장하기")
     @Parameter(name = "uploadId", description = "프로젝트 업로드에 사용되는 고유 아이디")
     @ApiResponse(responseCode = "200", description = "프로젝트 저장하기 성공")
-    public ResponseEntity<String> saveProject( @RequestParam("uploadId") String uploadId,
+    public ResponseEntity<String> uploadProject( @RequestParam("uploadId") String uploadId,
             @Parameter(description = "프로젝트에 업로드할 이미지 파일. 허용되는 파일 형식: jpg, jpeg, png, gif")
             @RequestParam("multipartFile") MultipartFile multipartFile){
-        projectService.saveProject(uploadId, multipartFile);
+        projectService.uploadProject(uploadId, multipartFile);
         return ResponseEntity.ok("프로젝트가 성공적으로 업로드되었습니다.");
     }
 
