@@ -1,6 +1,10 @@
 package ImageEditSolutions.api_server.controller;
 
 import ImageEditSolutions.api_server.service.ImageAIService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,14 +17,18 @@ import java.util.List;
 import java.util.Base64;
 
 @RestController
-@RequestMapping("/image-ai")
 @RequiredArgsConstructor
+@RequestMapping("/image-ai")
+@Tag(name = "AI Image Management", description = "AI 이미지 생성 및 수정 관련 API")
 public class ImageAIController {
 
     @Autowired
     ImageAIService imageAIService;
 
     @GetMapping
+    @Operation(summary = "AI 이미지 생성하기")
+    @Parameter(name = "prompt", description = "생성할 이미지의 설명을 나타내는 문자열")
+    @ApiResponse(responseCode = "200", description = "AI 이미지 생성하기 성공")
     public ResponseEntity<List<String>> createImageAI(@RequestParam String prompt) {
 
         // 이미지 생성
