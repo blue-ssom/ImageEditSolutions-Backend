@@ -5,16 +5,26 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 import java.util.Base64;
+import java.util.Collections;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,6 +34,10 @@ public class ImageAIController {
 
     @Autowired
     ImageAIService imageAIService;
+
+    private final String deeplApiKey = "9fb5c944-b94d-4f00-b099-44d455cf7375:fx";
+    private static final String deeplUrl = "https://api-free.deepl.com/v2/translate";
+    private final RestTemplate restTemplate;
 
     @GetMapping
     @Operation(summary = "AI 이미지 생성하기")
@@ -40,6 +54,30 @@ public class ImageAIController {
                 .toList();
 
         return ResponseEntity.ok(base64Images);
+    }
+
+    @PostMapping("/translate")
+    public ResponseEntity<?> translate(@RequestBody Map<String, String> request){
+        String prompt = request.get("prompt");
+
+        // 요청 헤더 설정
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("Authorization", "DeepL-Auth-Key " + deeplApiKey); // API 키 추가
+
+        // 요청 바디 설정
+        Map<String, Object> body = Map.of(
+                "text", Collections.singletonList(prompt),
+                "target_lang", "EN"
+        );
+
+        HttpEntity<Map<String, Object>> entity = new HttpEntity<>(body, headers);
+
+        // DeepL API 호출
+        ResponseEntity<String> deeplResponse = restTemplate.exchange(deeplUrl, HttpMethod.POST, entity, String.class);
+
+        // DeepL의 응답을 그대로 프론트엔드로 반환
+        return ResponseEntity.status(deeplResponse.getStatusCode()).body(deeplResponse.getBody());
     }
 
 }
