@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -37,7 +38,9 @@ public class ImageAIController {
     @Autowired
     ImageAIService imageAIService;
 
-    private final String deeplApiKey = "9fb5c944-b94d-4f00-b099-44d455cf7375:fx";
+    @Value("${DEEPL_API_KEY}")
+    private String deeplApiKey;
+
     private static final String deeplUrl = "https://api-free.deepl.com/v2/translate";
     private final RestTemplate restTemplate;
 
