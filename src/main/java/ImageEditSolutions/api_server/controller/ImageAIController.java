@@ -1,5 +1,7 @@
 package ImageEditSolutions.api_server.controller;
 
+import ImageEditSolutions.api_server.global.CustomException;
+import ImageEditSolutions.api_server.global.ErrorCode;
 import ImageEditSolutions.api_server.service.ImageAIService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -58,7 +60,13 @@ public class ImageAIController {
 
     @PostMapping("/translate")
     public ResponseEntity<?> translate(@RequestBody Map<String, String> request){
+
         String prompt = request.get("prompt");
+        
+        // 빈값 체크
+        if (prompt == null || prompt.trim().isEmpty()) {
+           throw new CustomException(ErrorCode.EMPTY_PROMPT);
+        }
 
         // 요청 헤더 설정
         HttpHeaders headers = new HttpHeaders();
