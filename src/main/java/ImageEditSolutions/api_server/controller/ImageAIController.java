@@ -74,7 +74,11 @@ public class ImageAIController {
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(body, headers);
 
         // DeepL API 호출
-        ResponseEntity<String> deeplResponse = restTemplate.exchange(deeplUrl, HttpMethod.POST, entity, String.class);
+        ResponseEntity<String> deeplResponse = restTemplate.exchange(
+                deeplUrl, // 요청을 보낼 DeepL API의 URL
+                HttpMethod.POST, // HTTP POST 메서드를 사용하여 요청
+                entity, // 요청 헤더와 바디를 포함하는 HttpEntity 객체
+                String.class); // 응답 타입으로 String 클래스를 지정
 
         // DeepL의 응답을 그대로 프론트엔드로 반환
         return ResponseEntity.status(deeplResponse.getStatusCode()).body(deeplResponse.getBody());
