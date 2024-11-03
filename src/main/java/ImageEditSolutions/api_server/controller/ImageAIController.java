@@ -59,6 +59,9 @@ public class ImageAIController {
     }
 
     @PostMapping("/translate")
+    @Operation(summary = "텍스트 번역하기")
+    @Parameter(name = "prompt", description = "생성할 이미지의 설명을 나타내는 문자열")
+    @ApiResponse(responseCode = "200", description = "텍스트 번역하기 성공")
     public ResponseEntity<?> translate(@RequestBody Map<String, String> request){
 
         String prompt = request.get("prompt");
