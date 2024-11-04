@@ -63,7 +63,6 @@ public class ImageAIController {
 
     @PostMapping("/translate")
     @Operation(summary = "텍스트 번역하기")
-    @Parameter(name = "prompt", description = "번역할 텍스트")
     @ApiResponse(responseCode = "200", description = "텍스트 번역하기 성공")
     public ResponseEntity<?> translate(@RequestBody Map<String, String> request){
 
